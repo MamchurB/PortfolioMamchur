@@ -1,0 +1,418 @@
+{
+  "info": {
+    "_postman_id": "1b6d5705-c297-449c-95a0-048e43ac2d5d",
+    "name": "Author",
+    "description": "### Welcome to Postman! This is your first collection. \n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests\n• Test your API in real-world scenarios\n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "50684097",
+    "_collection_link": "https://go.postman.co/collection/50684097-1b6d5705-c297-449c-95a0-048e43ac2d5d?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "getAuthors",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response is an array of authors\", function () {\r",
+              "    const responseBody = pm.response.json();\r",
+              "    pm.expect(responseBody).to.be.an(\"array\");\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{url}}/Authors",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "Authors"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "getBooksByAuthorId",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "",
+              "pm.test(\"Status code is 200 OK\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response time is acceptable (under 2 seconds)\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+              "});",
+              "",
+              "pm.test(\"Content-Type header is application/json\", function () {",
+              "    pm.response.to.have.header(\"Content-Type\");",
+              "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+              "});",
+              "",
+              "pm.test(\"Response body is an array\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.be.an(\"array\");",
+              "});",
+              "",
+              "pm.test(\"Each author has required fields with correct types\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    ",
+              "    if (jsonData.length > 0) {",
+              "        jsonData.forEach((author, index) => {",
+              "            pm.expect(author).to.have.property(\"id\");",
+              "            pm.expect(author.id).to.be.a(\"number\");",
+              "            ",
+              "            pm.expect(author).to.have.property(\"idBook\");",
+              "            pm.expect(author.idBook).to.be.a(\"number\");",
+              "            ",
+              "            pm.expect(author).to.have.property(\"firstName\");",
+              "            pm.expect(author.firstName).to.be.a(\"string\");",
+              "            ",
+              "            pm.expect(author).to.have.property(\"lastName\");",
+              "            pm.expect(author.lastName).to.be.a(\"string\");",
+              "        });",
+              "    }",
+              "});",
+              "",
+              "pm.test(\"All returned authors belong to the requested book\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    const requestedBookId = parseInt(pm.collectionVariables.get(\"idBook\"));",
+              "    ",
+              "    if (jsonData.length > 0 && !isNaN(requestedBookId)) {",
+              "        jsonData.forEach((author) => {",
+              "            pm.expect(author.idBook).to.equal(requestedBookId);",
+              "        });",
+              "    }",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{url}}/Authors/authors/books/{{idBook}}",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "Authors",
+            "authors",
+            "books",
+            "{{idBook}}"
+          ],
+          "query": [
+            {
+              "key": "",
+              "value": "",
+              "type": "text",
+              "disabled": true
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "addAuthor",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 201 or 200\", function () {\r",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);\r",
+              "});\r",
+              "\r",
+              "const responseBody = pm.response.json();\r",
+              "\r",
+              "pm.test(\"Author id exists\", function () {\r",
+              "    pm.expect(responseBody).to.have.property(\"id\");\r",
+              "});\r",
+              "pm.test(\"First name is correct\", function () {\r",
+              "    pm.expect(responseBody.firstName).to.eql(\"Bohdan\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Last name is correct\", function () {\r",
+              "    pm.expect(responseBody.lastName).to.eql(\"Mamchur\");\r",
+              "});\r",
+              "\r",
+              "pm.test(\"idBook is correct\", function () {\r",
+              "    pm.expect(responseBody.idBook).to.eql(0);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"id\": 2,\r\n  \"idBook\": 0,\r\n  \"firstName\": \"Bohdan\",\r\n  \"lastName\": \"Mamchur\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{url}}/Authors",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "Authors"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "getAuthorById",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "",
+              "pm.test(\"Status code is 200 OK\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response time is acceptable (under 2 seconds)\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+              "});",
+              "",
+              "pm.test(\"Content-Type header is application/json\", function () {",
+              "    pm.response.to.have.header(\"Content-Type\");",
+              "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+              "});",
+              "",
+              "pm.test(\"Response body is an object\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.be.an(\"object\");",
+              "});",
+              "",
+              "pm.test(\"Author has all required fields with correct types\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    ",
+              "    pm.expect(jsonData).to.have.property(\"id\");",
+              "    pm.expect(jsonData.id).to.be.a(\"number\");",
+              "    ",
+              "    pm.expect(jsonData).to.have.property(\"idBook\");",
+              "    pm.expect(jsonData.idBook).to.be.a(\"number\");",
+              "    ",
+              "    pm.expect(jsonData).to.have.property(\"firstName\");",
+              "    pm.expect(jsonData.firstName).to.be.a(\"string\");",
+              "    ",
+              "    pm.expect(jsonData).to.have.property(\"lastName\");",
+              "    pm.expect(jsonData.lastName).to.be.a(\"string\");",
+              "});",
+              "",
+              "pm.test(\"Returned author ID matches requested ID\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    const requestedId = parseInt(pm.collectionVariables.get(\"authorId\"));",
+              "    ",
+              "    if (!isNaN(requestedId)) {",
+              "        pm.expect(jsonData.id).to.equal(requestedId);",
+              "    }",
+              "});",
+              "",
+              "pm.test(\"Author name fields are not empty\", function () {",
+              "    const jsonData = pm.response.json();",
+              "    pm.expect(jsonData.firstName).to.not.be.empty;",
+              "    pm.expect(jsonData.lastName).to.not.be.empty;",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{url}}/Authors/{{authorId}}",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "Authors",
+            "{{authorId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "changeAuthor",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Author data is updated\", function () {\r",
+              "    const responseBody = pm.response.json();\r",
+              "\r",
+              "    pm.expect(responseBody.id).to.eql(2);\r",
+              "    pm.expect(responseBody.firstName).to.eql(\"Bohdan2\");\r",
+              "    pm.expect(responseBody.lastName).to.eql(\"M\");\r",
+              "    pm.expect(responseBody.idBook).to.eql(0);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"id\": 2,\r\n  \"idBook\": 0,\r\n  \"firstName\": \"Bohdan2\",\r\n  \"lastName\": \"M\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{url}}/Authors/{{authorId}}",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "Authors",
+            "{{authorId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "deleteAuthorById",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "",
+              "pm.test(\"Status code indicates successful deletion (200, 202, or 204)\", function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([200, 202, 204]);",
+              "});",
+              "",
+              "pm.test(\"Response time is acceptable (under 2 seconds)\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(2000);",
+              "});",
+              "",
+              "pm.test(\"Response body is empty or contains confirmation\", function () {",
+              "    const responseText = pm.response.text();",
+              "    if (pm.response.code === 204) {",
+              "        pm.expect(responseText).to.be.empty;",
+              "    } else if (pm.response.code === 200) {",
+              "        pm.expect(responseText).to.satisfy(function(text) {",
+              "            return text === \"\" || text.length >= 0;",
+              "        });",
+              "    }",
+              "});",
+              "",
+              "pm.test(\"Verify deletion by checking response status\", function () {",
+              "    pm.expect(pm.response.code).to.be.within(200, 299);",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{url}}/Authors/{{authorId}}",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "Authors",
+            "{{authorId}}"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "packages": {},
+        "requests": {},
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "idBook",
+      "value": ""
+    },
+    {
+      "key": "authorId",
+      "value": ""
+    },
+    {
+      "key": "url",
+      "value": ""
+    }
+  ]
+}
