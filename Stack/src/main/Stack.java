@@ -1,3 +1,5 @@
+package main;
+
 public class Stack<T> {
     private Node<T> top;
     private int size;
@@ -22,7 +24,7 @@ public class Stack<T> {
     }
     public T peek(){
         if( size == 0)
-            throw new IllegalStateException("Stack is empty!");
+            throw new IllegalStateException("main.java.Stack is empty!");
         return top.next.value;
     }
 
